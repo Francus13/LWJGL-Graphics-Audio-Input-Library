@@ -24,5 +24,7 @@ public class RenderableTexture extends Renderable{
         setSize(texture.width(), texture.height());
     }
 
+    public void free() {texture.free();}
+
     public Texture getTexture() {return texture;}
 }

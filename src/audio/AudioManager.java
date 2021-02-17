@@ -4,17 +4,18 @@ import org.lwjgl.openal.*;
 
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
-import static org.lwjgl.openal.AL11.*;
-import static org.lwjgl.openal.ALC11.*;
+import static org.lwjgl.openal.AL10.*;
+import static org.lwjgl.openal.ALC10.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
-
-import static runner.Timer.getTime;
+import static runner.Driver.getTime;
+import static runner.Driver.MUSIC_FADE_TIME;
 
 public class AudioManager {
     public static final int VOLUME_SCALE = 100;
-    private static final float FADE_TIME = 2;
 
     private static final List<Player> players = new ArrayList<>();
 
@@ -58,16 +59,17 @@ public class AudioManager {
         if (update) {
             float timeElapsed = (float) (getTime() - startTime);
 
-            if (timeElapsed < FADE_TIME)
-                musicPlayer.setGain((1 - timeElapsed / FADE_TIME) * musicGain);
+            if (timeElapsed < MUSIC_FADE_TIME)
+                musicPlayer.setGain((1 - timeElapsed / MUSIC_FADE_TIME) * musicGain);
             else {
                 if (hasToUpdateMusic){
-                    musicPlayer.play(nextMusic.id());
+                    if (nextMusic != null)
+                        musicPlayer.play(nextMusic.id());
                     hasToUpdateMusic = false;
                 }
 
-                if (timeElapsed < FADE_TIME * 2)
-                    musicPlayer.setGain((timeElapsed / FADE_TIME - 1) * musicGain);
+                if (timeElapsed < MUSIC_FADE_TIME * 2)
+                    musicPlayer.setGain((timeElapsed / MUSIC_FADE_TIME - 1) * musicGain);
                 else {
                     musicPlayer.setGain(musicGain);
                     update = false;

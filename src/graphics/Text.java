@@ -3,11 +3,11 @@ package graphics;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
-import static graphics.Color.BLACK;
+import static runner.Driver.BLACK;
 import static graphics.Texture.PADDING;
 import static graphics.Texture.emptyTexture;
 import static graphics.Window.deRender;
-import static runner.Timer.getTime;
+import static runner.Driver.getTime;
 
 public class Text extends Renderable{
     public static final int LEFT = 0;
@@ -15,7 +15,7 @@ public class Text extends Renderable{
     public static final int RIGHT = 2;
 
     private Texture textBox;
-    private final Font font;
+    private Font font;
     private final int alignment;
     private Color color;
     private final boolean variableSized;
@@ -27,12 +27,35 @@ public class Text extends Renderable{
     private Deque<String> textToRender;
     private Deque<Double> timesToRender;
 
+    public Text (){
+        super();
+
+        font = null;
+        alignment = LEFT;
+        color = BLACK;
+        variableSized = false;
+        variableHeight = false;
+        textBox = null;
+    }
+
     public Text (Texture textBox){
         super();
 
         font = null;
-        alignment = 0;
-        color = null;
+        alignment = LEFT;
+        color = BLACK;
+        variableSized = false;
+        variableHeight = false;
+        this.textBox = textBox;
+        setSize(textBox.width(), textBox.height());
+    }
+
+    public Text (Texture textBox, int alignment){
+        super();
+
+        font = null;
+        this.alignment = alignment;
+        color = BLACK;
         variableSized = false;
         variableHeight = false;
         this.textBox = textBox;
@@ -53,7 +76,26 @@ public class Text extends Renderable{
                 font.getAscent() - font.getDescent() + 1 + PADDING);
     }
 
+    public static Texture createTextTexture(String text, Font font, Color color){
+        char[] chars = text.toCharArray();
+        int width = PADDING;
+        for (char c: chars){
+            if (c == ' ')
+                width += font.getSpaceAdvance();
+            else
+                width += font.getGlyph(c).hAdvance();
+        }
+
+        return new Texture(text, font, color, LEFT, width + PADDING + 1,
+                font.getAscent() - font.getDescent() + 1 + PADDING);
+    }
+
     public void setTextTexture(Texture textBox){
+        if (alignment == CENTER)
+            x += (this.textBox.width() - textBox.width()) / 2f;
+        else if (alignment == RIGHT)
+            x += this.textBox.width() - textBox.width();
+
         this.textBox = textBox;
         setSize(textBox.width(), textBox.height());
     }
@@ -296,11 +338,11 @@ public class Text extends Renderable{
             }
 
             if (alignment == CENTER){
-                x -= (width + PADDING - this.width) / 2;
+                x -= (width + PADDING + 1 - this.width) / 2;
             }
 
             else if (alignment == RIGHT){
-                x -= width + PADDING - this.width;
+                x -= width + PADDING + 1 - this.width;
             }
 
             setSize(width + PADDING + 1, font.getAscent() - font.getDescent() + 1 + PADDING);
@@ -333,11 +375,11 @@ public class Text extends Renderable{
             }
 
             if (alignment == CENTER){
-                x -= (width + PADDING - this.width) / 2;
+                x -= (width + PADDING + 1 - this.width) / 2;
             }
 
             else if (alignment == RIGHT){
-                x -= width + PADDING - this.width;
+                x -= width + PADDING + 1 - this.width;
             }
 
             if (useTWidth)
@@ -448,6 +490,11 @@ public class Text extends Renderable{
         startTime = getTime();
     }
 
+    public void updateTextureTimed(Texture texture){
+        this.setTextTexture(texture);
+        startTime = getTime();
+    }
+
     private void update(){
         double newTime = getTime();
         if (isPaused){
@@ -485,6 +532,8 @@ public class Text extends Renderable{
     public void setOriginalSize(){
         setSize(textBox.width(), textBox.height());
     }
+
+    public void free() {textBox.free(); color = null; font = null; textToRender = null; timesToRender = null;}
 
     Texture getTexture(){
         if (isTimed())

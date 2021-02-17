@@ -6,12 +6,11 @@ import org.lwjgl.system.libc.LibCStdlib;
 import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
 
+import static org.lwjgl.openal.AL10.*;
 import static org.lwjgl.openal.AL11.*;
 import static org.lwjgl.stb.STBVorbis.stb_vorbis_decode_filename;
 
 public class Sound {
-    public static final Sound testSound = new Sound("Shotgun Shot");
-
     private final int id;
 
     public Sound(String fileName){

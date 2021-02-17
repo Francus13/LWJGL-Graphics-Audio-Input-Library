@@ -56,15 +56,15 @@ public class Slider {
     public int value() {hasChanged = false; return (int) value;}
     public boolean hasChanged() {return hasChanged;}
 
-    public void setValue(int v){
-        if (v < 0 || v > maxValue){
-            System.err.println("Invalid slider value: v");
+    public void setValue(int val){
+        if (val < 0 || val > maxValue){
+            System.err.println("Invalid slider value: " + val);
             System.exit(1);
         }
 
-        sliderDragger.move(length * (v - value) / maxValue, 0);
+        sliderDragger.move(length * (val - value) / maxValue, 0);
         hasChanged = true;
-        value = v;
+        value = val;
     }
 
     public void update(){

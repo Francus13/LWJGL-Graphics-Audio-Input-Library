@@ -1,14 +1,10 @@
 package graphics;
 
 public class Color {
-    public static Color WHITE = new Color(1, 1, 1, 1);
-    public static Color BLACK = new Color(0, 0, 0, 1);
-    public static Color ERROR_COLOR = new Color(1, 0, 0, 1);
-
-    private float r;
-    private float g;
-    private float b;
-    private float a;
+    private final float r;
+    private final float g;
+    private final float b;
+    private final float a;
 
     public Color(float r, float g, float b, float a){
         this.r = r;

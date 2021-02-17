@@ -1,8 +1,10 @@
 package graphics;
 
+import static java.lang.System.exit;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL46C.*;
 import static org.lwjgl.system.MemoryUtil.*;
+import static runner.Driver.WHITE;
 
 import handlers.*;
 
@@ -25,31 +27,37 @@ public class Window {
     private static Shader shader;
 
     private static final List<Renderable> toBeRendered = new ArrayList<>();
-    private static final List<Renderable> toBeDeRendered = new ArrayList<>();
     private static int startIndex = 0;
 
-    public static void initWindow(int w, int h) {
+    public static void initWindow(int w, int h, boolean resizable, boolean fullscreen) {
         width = w;
         height = h;
 
         if (!glfwInit()){
             System.err.println("GLFW initialization failed");
-            System.exit(1);
+            exit(1);
         }
 
-        glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
-        window = glfwCreateWindow(width, height, "Magic Wagic", glfwGetPrimaryMonitor(), NULL);
+        if (resizable)
+            glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
+        else
+            glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);
+
+        if (fullscreen)
+            window = glfwCreateWindow(width, height, "Roomie", glfwGetPrimaryMonitor(), NULL);
+        else
+            window = glfwCreateWindow(width, height, "Roomie", NULL, NULL);
 
         if (window == NULL){
             System.err.println("Could not create the Window");
-            System.exit(1);
+            exit(1);
         }
 
         glfwMakeContextCurrent(window);
         GL.createCapabilities();
 
         glClearColor(0, 0, 0, 1.0f);
-        glfwSetWindowPos(window, 0, 0);
+        glfwSetWindowPos(window, 0, 38);
         glfwShowWindow(window);
 
         glfwSetKeyCallback(window, keyCallback);
@@ -61,7 +69,7 @@ public class Window {
         shader = new Shader("DefaultShader");
 
         shader.bind();
-        shader.setUniform("matColor", Color.WHITE);
+        shader.setUniform("matColor", WHITE);
 
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -101,6 +109,10 @@ public class Window {
     public static void unFreeze() {startIndex = 0;}
 
     public static void render(Renderable r) {
+        if (r.isRendered()){
+            System.err.println("Window.render(): Renderable is already rendered" + r);
+            System.exit(1);
+        }
         toBeRendered.add(r);
         r.setRendered(true);
         if (r instanceof Animation)
@@ -120,7 +132,14 @@ public class Window {
         toBeRendered.clear();
     }
 
-    public static List<Renderable> getRenderedList() {return new ArrayList<>(toBeRendered);}
+    public static void reRender(Renderable r){
+        toBeRendered.remove(r);
+        toBeRendered.add(r);
+        if (r instanceof Animation)
+            ((Animation) r).reset();
+        if (r.isTimed())
+            r.startTime();
+    }
 
     private static void prepare(){
         glDisable(GL_DEPTH_TEST);
@@ -133,7 +152,6 @@ public class Window {
         glBindTexture(GL_TEXTURE_2D, tex.id());
         shader.setUniform("pixelScale", width, height);
         shader.setUniform("screenPos", x, y);
-        shader.setUniform("subImage", 0, 0, width, height);
         mesh.render();
     }
 }

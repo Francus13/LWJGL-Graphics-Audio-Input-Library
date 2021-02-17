@@ -3,7 +3,7 @@ import handlers.Cursor;
 
 import static graphics.Window.windowHeight;
 import static graphics.Window.windowWidth;
-import static runner.Timer.getTime;
+import static runner.Driver.getTime;
 
 public abstract class Renderable {
     public static final int CENTERED = -1;
@@ -30,6 +30,7 @@ public abstract class Renderable {
 
     abstract Texture getTexture();
     abstract void setOriginalSize();
+    abstract void free();
 
     public float x() {return x;}
     public float y() {return y;}
@@ -54,6 +55,11 @@ public abstract class Renderable {
             this.y = y - height;
     }
 
+    public float xCenter(Renderable r){return r.x + (r.width - width) / 2;}
+    public float yCenter(Renderable r){return r.y + (r.height - height) / 2;}
+    public void centerAround(Renderable r){x = xCenter(r); y = yCenter(r);}
+
+
     public void move(float dx, float dy) {x += dx; y += dy;}
 
     public float width() {return width;}
@@ -69,7 +75,7 @@ public abstract class Renderable {
     }
 
     public boolean isTimed() {return timed;}
-    public void setTimed() {timed = true;}
+    public void setTimed(boolean timed) {this.timed = timed;}
     public void setTime(double time) {this.time = time;}
     public void startTime() {startTime = getTime();}
     public void unFreeze(double time) {startTime += time;}

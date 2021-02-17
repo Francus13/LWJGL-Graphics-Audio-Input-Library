@@ -62,6 +62,9 @@ public class Texture {
             System.exit(1);
         }
 
+        this.width = width;
+        this.height = height;
+
         IntBuffer w = BufferUtils.createIntBuffer(1);
         IntBuffer h = BufferUtils.createIntBuffer(1);
         IntBuffer channels = BufferUtils.createIntBuffer(1);
@@ -155,7 +158,7 @@ public class Texture {
                     for (int k = startWordIndex; k < endWordIndex; k++) {
                         for (int j = 0; j < chars[k].length; j++) {
                             glyph = font.getGlyph(chars[k][j]);
-                            glTexSubImage2D(GL_TEXTURE_2D, 0, x + glyph.leftBearing(), y + glyph.ascent(),
+                            glTexSubImage2D(GL_TEXTURE_2D, 0, x + glyph.leftBearing() + PADDING / 2, y + glyph.ascent(),
                                     glyph.width(), glyph.height(), GL_ALPHA, GL_UNSIGNED_BYTE, glyph.imageData());
                             x += glyph.hAdvance();
                         }
@@ -176,7 +179,7 @@ public class Texture {
                     for (int k = startWordIndex; k < endWordIndex; k++) {
                         for (int j = 0; j < chars[k].length; j++) {
                             glyph = font.getGlyph(chars[k][j]);
-                            glTexSubImage2D(GL_TEXTURE_2D, 0, x + glyph.leftBearing(), y + glyph.ascent(),
+                            glTexSubImage2D(GL_TEXTURE_2D, 0, x + glyph.leftBearing() + PADDING / 2, y + glyph.ascent(),
                                     glyph.width(), glyph.height(), GL_ALPHA, GL_UNSIGNED_BYTE, glyph.imageData());
                             x += glyph.hAdvance();
                         }
@@ -284,6 +287,8 @@ public class Texture {
                 width.get(), height.get(), GL_RGBA, GL_UNSIGNED_BYTE, data);
         stbi_image_free(data);
     }
+
+    public void free() {glDeleteTextures(id);}
 
     public int id() {return id;}
     public int width() {return width;}

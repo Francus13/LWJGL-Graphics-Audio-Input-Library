@@ -7,7 +7,6 @@ import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
 
 import static org.lwjgl.openal.AL10.*;
-import static org.lwjgl.openal.AL10.AL_NO_ERROR;
 import static org.lwjgl.stb.STBVorbis.stb_vorbis_decode_filename;
 
 public class Music{

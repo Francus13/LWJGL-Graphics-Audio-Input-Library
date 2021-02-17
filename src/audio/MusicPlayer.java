@@ -1,5 +1,6 @@
 package audio;
 
+import static org.lwjgl.openal.AL10.*;
 import static org.lwjgl.openal.AL11.*;
 
 public class MusicPlayer extends Player{

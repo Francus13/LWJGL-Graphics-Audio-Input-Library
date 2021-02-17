@@ -31,7 +31,6 @@ public class Keys extends GLFWKeyCallback{
     public static boolean otherKeyPressed(int keycode) {
         for (int i = 0; i < keys.length; i++){
             if (i != keycode && keys[i] == PRESSED){
-                System.out.println(keycode);
                 return true;
             }
         }

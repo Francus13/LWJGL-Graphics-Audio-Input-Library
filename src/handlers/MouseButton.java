@@ -6,8 +6,8 @@ import static handlers.States.*;
 import static org.lwjgl.glfw.GLFW.*;
 
 public class MouseButton extends GLFWMouseButtonCallback{
-    private static byte leftClick = 0;
-    private static byte rightClick = 0;
+    private static byte leftClick = RELEASED;
+    private static byte rightClick = RELEASED;
 
     @Override
     public void invoke(long window, int button, int action, int mods) {
@@ -28,6 +28,6 @@ public class MouseButton extends GLFWMouseButtonCallback{
     public static byte leftClick() {return leftClick;}
     public static byte rightClick() {return rightClick;}
 
-    public static void setLeftRepeated(){leftClick = REPEATED;}
-    public static void setRightRepeated(){rightClick = REPEATED;}
+    public static void setLeftRepeated() {if (leftClick == PRESSED) leftClick = REPEATED;}
+    public static void setRightRepeated() {if (rightClick == PRESSED) rightClick = REPEATED;}
 }

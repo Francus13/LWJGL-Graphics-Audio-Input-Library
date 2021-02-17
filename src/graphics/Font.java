@@ -16,15 +16,6 @@ import org.lwjgl.stb.STBTTFontinfo;
 import static org.lwjgl.stb.STBTruetype.*;
 
 public class Font {
-    public static Font TIMES_NEW_ROMAN_32;
-    public static Font ARIAL_32;
-    public static Font ARIAL_96;
-    public static Font ARIAL_25;
-    public static Font ARIAL_50;
-    public static Font OLD_32;
-    public static Font PIXELATED_32;
-    public static Font COMIC_SANS_24;
-
     private final int ascent;
     private final int descent;
     private final int vAdvance;
@@ -50,7 +41,7 @@ public class Font {
             e.printStackTrace();
         }
 
-        float scale = stbtt_ScaleForPixelHeight(fontInfo, size * 2);
+        float scale = stbtt_ScaleForPixelHeight(fontInfo, size);
 
         IntBuffer ascent1 = BufferUtils.createIntBuffer(1);
         IntBuffer descent = BufferUtils.createIntBuffer(1);
@@ -91,17 +82,6 @@ public class Font {
                     (int) (leftBearing.get() * scale)));
 
         }
-    }
-
-    public static void initFonts(){
-        TIMES_NEW_ROMAN_32 = new Font("Times New Roman", 32);
-        ARIAL_32 = new Font("Arial", 32);
-        ARIAL_96 = new Font("Arial", 96);
-        ARIAL_25 = new Font("Arial", 25);
-        ARIAL_50 = new Font("Arial", 50);
-        OLD_32 = new Font("UnifrakturCook-Bold", 32);
-        PIXELATED_32 = new Font("PressStart2P-Regular", 32);
-        COMIC_SANS_24 = new Font("Comic Sans", 24);
     }
 
     public Glyph getGlyph(char c) {return glyphMap.get(c);}
