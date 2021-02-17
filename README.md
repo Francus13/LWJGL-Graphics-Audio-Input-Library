@@ -4,7 +4,7 @@ To use this library, put the res and src folders in a Java project using the LWJ
 
 `Driver.update()` calls the application loop, where `App.update()` is called at least once every frame before the frame is rendered.
 
-#Usage
+# Usage
 Your application should run by calling `Driver.main()`.
 
 App.java is the only file that needs to be edited.
@@ -15,9 +15,9 @@ In order to prevent applications feeling even slower when the computer is unable
 time is measured in realtime and not by the number of frames that have been rendered.
 Thus, `App.update` may be called multiple times per actual frame render.
 
-##Graphics
+## Graphics
 
-###Renderable
+### Renderable
 Everything that is rendered on screen is composed of Renderables.
 There are three kinds of Renderables: RenderableTextures, Animations, and Texts.
 Renderables have an x-coordinate, a y-coordinate, a width, a height, and a boolean indicating if they are currently rendered.
@@ -35,7 +35,7 @@ When possible, it is wise to reuse Texture objects in order to conserve memory a
 In order to free a Texture t, call `t.free()`.
 To free a Renderable r and its underlying Texture or Textures, call `r.free()`.
 
-###RenderableTexture
+### RenderableTexture
 A RenderableTexture renders a still image in .png format.
 Calling `new RenderableTexture(filename)` creates a new RenderableTexture that renders the image at /res/Images/filename.png.
 
@@ -46,7 +46,7 @@ To get the Texture of an existing RenderableTexture r, call `r.getTexture()`.
 An image in .png format can be drawn on top of the current image of a Texture in a RenderableTexture r by calling
 `r.addImage(filename, x, y)`where the image at filename is placed at the x- and y-coordinates of the current Texture.
 
-###Animation
+### Animation
 An Animation renders multiple still images in .png format in a sequence.
 Calling `new Animation(filename, numFrames, doesRepeat)` creates a new Animation with frames = numFrames that renders the images in the folder at /res/Images/filename.
 All the images in /res/Images/filename are of the form _X.png where the image is the Xth frame of the Animation.
@@ -62,7 +62,7 @@ This is to ensure that an Animation is rendered correctly in real time.
 An Animation a can be reset to the first frame by calling `a.reset()`.
 When an Animation is passed to `Window.render()` or `Window.reRender()`, it is reset.
 
-###Text
+### Text
 A Text renders a completely transparent image with a piece of text drawn on it.
 A Text has the following properties:
 
@@ -105,41 +105,41 @@ If a width or height are specified in the constructor of a Text, then the image 
 The size of Blank.png is 1920x1080, and an error will occur if a Text is made with greater dimensions than Blank.png.
 The size of Blank.png can be changed by replacing it with a different fully-transparent image called Blank.png of the desired size.
 
-###Font
+### Font
 Calling `new Font(name, size)` creates a size-point Font using the font file at /res/Fonts/name.ttf.
 Creating a Font requires a lot of processing power, so Fonts can be created when the application is started when Font variables are initialized in `Driver.initFonts()`.
 Remember to include licenses for used fonts somewhere in the project directory.
 
-###Color
+### Color
 Calling 'new Color(r, g, b, a)' creates a new RGBA color where r, g, b, and a are between 0 and 1 inclusive.
 Colors can be created when the application is started when Color variables are initialized in `Driver.initColors()`.
 Do not remove Driver.BLACK or Driver.WHITE or their initializations.
 
-###NumberTextureGetter
+### NumberTextureGetter
 Since applications may want to render the same number multiple times in the same font and color,
 NumberTextureGetter abstracts the process of reusing the number textures in order to same memory and processing power.
 `NumberTextureGetter.getNumberTexture(num, font)` returns a Texture used exactly as
 `Text.createTextTexture()` where the text is the specified number in the specified font.
 A Color can also be passed into `NumberTextureGetter.getNumberTexture()` in order to make the text of the specified color.
 
-###Changing Window Properties
+### Changing Window Properties
 To change the frame rate, change the dividend of FPSInverse in Driver.java to the desired frames per second.
 
 To change the resolution, change the first two parameters of initWindow() in Driver.init() to the desired width and height respectively.
 
 To make the application windowed instead of fullscreen, change the third parameter of initWindow() in Driver.init() to false.
 
-###Shader
+### Shader
 Default .fs and .vs shader files are included in /res/Shaders, so there is no need to create additional shaders.
 Calling `new Shader(filename)` creates a new Shader using /res/Shaders/filename.fs and /res/Shaders/filename.vs.
 However, this library does not support an abstraction for implementing a different Shader.
 In addition, this library does not support switching shaders while the application is running.
 In order to implement a different Shader, Window.java needs to be edited, and new `setUniform()` functions may need to be implemented in Shader.java.
 
-##Audio
+## Audio
 All audio files must be in .ogg format, and all audio must be in either 16-bit mono or 16-bit stereo format.
 
-###Sound
+### Sound
 Calling `new Sound(filename)` creates a new Sound that plays the audio at /res/Audio/Sounds/filename.ogg.
 To play a Sound s, call `AudioManager.play(s)`.
 Calling `AudioManager.play(s, numTimes)` plays s numTimes times subsequently.
@@ -147,7 +147,7 @@ To play an array of Sounds sArr subsequently, call `AudioManager.play(sArr)`.
 In order to play multiple Sounds at the same time instead of subsequently, call `AudioManager.play()` multiple times.
 To free a Sound s, call `AudioManager.free(s)`.
 
-###Music
+### Music
 Unlike with Sound objects, only one Music can be played at a time.
 To play a Music m, call `AudioManager.play(m)`.
 When `AudioManager.play()` is called, the Music that is currently playing will fade out for a duration of seconds equal to Driver.MUSIC_FADE_TIME.
@@ -158,7 +158,7 @@ The default value for Driver.MUSIC_FADE_TIME is 2, and it can be changed in Driv
 To free a Music m, call `AudioManager.free(m)`.
 If no Music is being used in the application, `updateMusic()` can be removed from the end of `App.update()`.
 
-###Volume
+### Volume
 There are three volumes: master, sound, and music.
 To change the master volume to v, call `setMasterVolume(v)`.
 To change the sound volume to v, call `setSoundVolume(v)`.
@@ -167,24 +167,24 @@ The volume parameter should be between 0 and 100, where 0 represents no volume a
 Changing the master volume changes the volume of all Sounds and Musics that are playing and will be played.
 Changing the sound and music volume will do the same, but only for Sounds and Musics respectively.
 
-##User Input
+## User Input
 
-###Cursor
+### Cursor
 To get the x-coordinate of the cursor, call `Cursor.x()`.
 To get the y-coordinate of the cursor, call `Cursor.y()`.
 
-###MouseButton
+### MouseButton
 The left mouse button and right mouse button will each be in one of three states: States.RELEASED, States.PRESSED, and States.REPEATED.
 The states of the left and right mouse buttons can be queried by calling `MouseButton.leftClick()` and `MouseButton.rightClick` respectively.
 At the end of `App.update()` is `setLeftRepeated()`, which will set the left mouse button's state to States.REPEATED if it is currently States.PRESSED.
 `setLeftRepeated()` can be removed if the state of the left mouse button is never queried in the application.
 `setRightRepeated()` acts similarly for the right mouse button's state.
 
-###Scroll
+### Scroll
 Whenever the scroll is moved vertically during the application, it will add or subtract from the scroll offset.
 Calling `Scroll.offset()` will return the scroll offset and reset it to zero.
 
-###Keys
+### Keys
 States.java contains a list of keys that are tracked, as well as a function `init()` that maps GLFW keys to the tracked keys.
 All tracked keys will each be in one of three states: States.RELEASED, States.PRESSED, and States.REPEATED.
 The state of a key k is queried by calling `Keys.key(k)`.
@@ -193,7 +193,7 @@ At the end of `App.update()` is `setKeysRepeated()`, which will set the state of
 In order to add or remove tracked keys, add or remove that key from the list in States.java, add or remove the mapping from the GLFW key to that key in `States.init()`,
 and update States.KEY_LAST to 1 + the greatest value of a tracked key.
 
-#Limitations
+# Limitations
 All images must be in .png format
 
 All audio must be in .ogg format
