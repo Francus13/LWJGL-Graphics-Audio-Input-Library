@@ -1,6 +1,8 @@
-# LWJGL Graphics-and-More Library
+# LWJGL Graphics, Audio, and User Input Library
 This is a library for creating an application with 2D graphics, audio, and user input built upon LWJGL.
-To use this library, put the res and src folders in a Java project using the LWJGL library.
+To set up this library, create a Java project that uses the LWJGL library.
+Then, put the included res and src folders into the project.
+The project may need to be reloaded.
 
 `Driver.update()` calls the application loop, where `App.update()` is called at least once every frame before the frame is rendered.
 
