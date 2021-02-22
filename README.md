@@ -7,7 +7,7 @@ To use this library, put the res and src folders in a Java project using the LWJ
 # Usage
 Your application should run by calling `Driver.main()`.
 
-App.java is the only file that needs to be edited.
+App.java is the only file that is required to be edited.
 App.java needs to have a `public static void initApp()` and a `public static void update()`.
 See Input Usage for some possible requirements in `App.update()`.
 
