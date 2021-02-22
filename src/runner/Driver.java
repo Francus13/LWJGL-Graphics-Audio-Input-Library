@@ -15,16 +15,10 @@ public class Driver {
     public static final double FPSInverse = 1.0/60;
     public static final float MUSIC_FADE_TIME = 2;
     private static boolean running = false;
-    private Game game;
-
-    public static Font ARIAL_25;
-    public static Font ARIAL_30;
-    public static Font ARIAL_40;
-    public static Font ARIAL_50;
+    private App app;
 
     public static Color WHITE = new Color(1, 1, 1, 1);
     public static Color BLACK = new Color(0, 0, 0, 1);
-    public static Color ERROR_COLOR = new Color(1, 0, 0, 1);
 
     private void init() {
         glfwSetErrorCallback(new ErrorHandler());
@@ -34,20 +28,14 @@ public class Driver {
         initFonts();
         initColors();
         initAudioManager();
-        game = new Game(-1);
+        app = new App();
     }
 
-    public static void initFonts(){
-        ARIAL_25 = new Font("Arial", 25);
-        ARIAL_30 = new Font("Arial", 30);
-        ARIAL_40 = new Font("Arial", 40);
-        ARIAL_50 = new Font("Arial", 50);
-    }
+    public static void initFonts(){}
 
     public static void initColors(){
         WHITE = new Color(1, 1, 1, 1);
         BLACK = new Color(0, 0, 0, 1);
-        ERROR_COLOR = new Color(1, 0, 0, 1);
     }
 
     private void run(){
@@ -64,7 +52,7 @@ public class Driver {
 
                 while (unprocessed >= FPSInverse) {
                     unprocessed -= FPSInverse;
-                    game.update();
+                    app.update();
 
                     glfwPollEvents();
                 }
