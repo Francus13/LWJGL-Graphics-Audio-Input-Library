@@ -1,4 +1,6 @@
 # LWJGL Graphics, Audio, and User Input Library
+This README.md is currently outdated due to the latest commit.
+
 This is a library for creating an application with 2D graphics, audio, and user input built upon LWJGL.
 To set up this library, create a Java project that uses the LWJGL library.
 Then, put the included res and src folders into the project.
