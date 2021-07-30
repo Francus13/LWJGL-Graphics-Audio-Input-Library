@@ -1,7 +1,7 @@
-package graphics;
+package graphicsLibrary;
 
-import static runner.Driver.getTime;
 import static runner.Driver.FPSInverse;
+import static runner.Driver.getTime;
 
 public class Animation extends Renderable{
 
@@ -20,6 +20,7 @@ public class Animation extends Renderable{
         }
 
         setSize(frames[0].width(), frames[0].height());
+        setPQ(width, height);
     }
 
     public Animation(String fileName, int numFrames, boolean doesRepeat, double secondsPerFrame) {
@@ -33,6 +34,7 @@ public class Animation extends Renderable{
         }
 
         setSize(frames[0].width(), frames[0].height());
+        setPQ(width, height);
     }
 
     public void addImage(String fileName, int numFrames, float x, float y){

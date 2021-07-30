@@ -1,4 +1,4 @@
-package audio;
+package audioLibrary;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.system.libc.LibCStdlib;
@@ -35,7 +35,6 @@ public class Music{
 
         if (alGetError() != AL_NO_ERROR){
             System.err.println("Failure to retrieve audio data or create music: " + fileName);
-            System.exit(1);
         }
 
         LibCStdlib.free(data);

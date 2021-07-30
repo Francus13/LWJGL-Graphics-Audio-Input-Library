@@ -1,4 +1,6 @@
-package graphics;
+package graphicsLibrary;
+
+import static runner.Driver.getTime;
 
 public class RenderableTexture extends Renderable{
     private final Texture texture;
@@ -7,12 +9,14 @@ public class RenderableTexture extends Renderable{
         super();
         texture = new Texture("res/Images/" + fileName + ".png");
         setSize(texture.width(), texture.height());
+        setPQ(width, height);
     }
 
     public RenderableTexture(Texture texture){
         super();
         this.texture = texture;
         setSize(texture.width(), texture.height());
+        setPQ(width, height);
     }
 
     public void addImage(String fileName, float x, float y) {
@@ -26,5 +30,5 @@ public class RenderableTexture extends Renderable{
 
     public void free() {texture.free();}
 
-    public Texture getTexture() {return texture;}
+    public Texture getTexture() {if (timed && getTime() - startTime >= time) return null; return texture;}
 }

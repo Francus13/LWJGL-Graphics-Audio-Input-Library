@@ -1,4 +1,4 @@
-package graphics;
+package graphicsLibrary;
 
 public class Color {
     private final float r;

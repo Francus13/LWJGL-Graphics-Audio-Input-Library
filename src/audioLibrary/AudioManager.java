@@ -1,6 +1,7 @@
-package audio;
+package audioLibrary;
 
-import org.lwjgl.openal.*;
+import org.lwjgl.openal.AL;
+import org.lwjgl.openal.ALC;
 
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
@@ -8,11 +9,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.lwjgl.openal.AL10.*;
-import static org.lwjgl.openal.ALC10.*;
+import static org.lwjgl.openal.AL11.*;
+import static org.lwjgl.openal.ALC11.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
-import static runner.Driver.getTime;
 import static runner.Driver.MUSIC_FADE_TIME;
+import static runner.Driver.getTime;
+
 
 public class AudioManager {
     public static final int VOLUME_SCALE = 100;
@@ -29,7 +31,7 @@ public class AudioManager {
 
     private static long device;
     private static long context;
-    
+
     private static float masterGain = 1;
     private static float musicGain = 1;
     private static float soundGain = 1;
@@ -63,8 +65,13 @@ public class AudioManager {
                 musicPlayer.setGain((1 - timeElapsed / MUSIC_FADE_TIME) * musicGain);
             else {
                 if (hasToUpdateMusic){
-                    if (nextMusic != null)
+                    if(nextMusic != null){
+                        musicPlayer.stop();
                         musicPlayer.play(nextMusic.id());
+                    }
+                    else
+                        musicPlayer.stop();
+
                     hasToUpdateMusic = false;
                 }
 
@@ -78,65 +85,77 @@ public class AudioManager {
         }
     }
 
-    public static void play(Music music){
+    public static MusicPlayer play(Music music, boolean looping){
         update = true;
         hasToUpdateMusic = true;
         nextMusic = music;
         startTime = getTime();
+        musicPlayer.setLooping(looping);
+
+        return musicPlayer;
     }
 
-    public static void play(Sound sound){
-        Player player = null;
-        for (Player p: players)
-            if (p.isNotPlaying()) {
-                player = p;
-                break;
-            }
-        if (player == null){
-            player = new Player(soundGain);
-            players.add(player);
-        }
+    public static void stopMusic(){
+        update = true;
+        hasToUpdateMusic = true;
+        nextMusic = null;
+        startTime = getTime();
+    }
+
+    public static Player play(Sound sound){
+        Player player = getPlayer();
 
         player.play(sound.id());
+        return player;
     }
 
-    public static void play(Sound sound, int numTimes){
-        Player player = null;
-        for (Player p: players)
-            if (p.isNotPlaying()) {
-                player = p;
-                break;
-            }
-        if (player == null){
-            player = new Player(soundGain);
-            players.add(player);
-        }
+    public static Player play(Sound sound, int numTimes){
+        Player player = getPlayer();
 
         int[] soundIds = new int[numTimes];
         Arrays.fill(soundIds, sound.id());
 
         player.play(soundIds);
+        return player;
     }
 
-    public static void play(Sound[] sounds){
-        Player player = null;
-        for (Player p: players)
-            if (p.isNotPlaying()) {
-                player = p;
-                break;
-            }
-        if (player == null){
-            player = new Player(soundGain);
-            players.add(player);
-        }
+    public static Player play(Sound[] sounds){
+        Player player = getPlayer();
 
         int[] soundIds = new int[sounds.length];
         for (int i = 0; i < sounds.length; i++)
             soundIds[i] = sounds[i].id();
 
         player.play(soundIds);
+        return player;
     }
-    
+
+    private static Player getPlayer(){
+        Player player = null;
+        for (Player p: players)
+            if (p.isStopped()) {
+                player = p;
+                break;
+            }
+        if (player == null){
+            player = new Player(soundGain);
+            players.add(player);
+        }
+        return player;
+    }
+
+    public static void pauseAudio(){
+        musicPlayer.pause();
+        for (Player player: players)
+            player.pause();
+    }
+
+    public static void playPausedAudio(){
+        musicPlayer.start();
+        for (Player player: players)
+            player.start();
+    }
+
     public static int getMasterVolume() {return (int) (masterGain * VOLUME_SCALE);}
     public static int getMusicVolume() {return (int) (musicGain * VOLUME_SCALE);}
     public static int getSoundVolume() {return (int) (soundGain * VOLUME_SCALE);}
@@ -160,6 +179,7 @@ public class AudioManager {
     public static void free(Music music) {alDeleteBuffers(music.id());}
 
     public static void terminateAudioManager(){
+        musicPlayer.free();
         for (Player player: players)
             player.free();
 

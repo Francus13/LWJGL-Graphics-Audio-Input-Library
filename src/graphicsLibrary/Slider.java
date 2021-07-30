@@ -1,9 +1,10 @@
-package graphics;
+package graphicsLibrary;
 
 import handlers.Cursor;
 
 import static handlers.MouseButton.leftClick;
-import static handlers.States.*;
+import static handlers.States.PRESSED;
+import static handlers.States.RELEASED;
 
 public class Slider {
     private final RenderableTexture sliderBase;

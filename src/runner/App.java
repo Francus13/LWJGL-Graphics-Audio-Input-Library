@@ -1,22 +1,31 @@
 package runner;
 
-import static audio.AudioManager.updateMusic;
+import graphicsLibrary.Color;
 
-import static handlers.Keys.setKeysRepeated;
-import static handlers.MouseButton.setLeftRepeated;
-import static handlers.MouseButton.setRightRepeated;
+import static audioLibrary.AudioManager.updateMusic;
+import static handlers.States.*;
 
 public class App {
+    public static final boolean debug = false;
+
     public App(){
 
     }
 
     public void update(){
-
-
         updateMusic();
-        setLeftRepeated();
-        setRightRepeated();
-        setKeysRepeated();
+        updateInput();
+    }
+
+
+
+    public static void initFonts(){
+
+    }
+
+    public static Color BLACK;
+
+    public static void initColors(){
+        BLACK = new Color(0, 0, 0, 1);
     }
 }

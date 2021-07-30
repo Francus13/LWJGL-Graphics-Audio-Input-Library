@@ -1,6 +1,5 @@
-package audio;
+package audioLibrary;
 
-import static org.lwjgl.openal.AL10.*;
 import static org.lwjgl.openal.AL11.*;
 
 public class Player {
@@ -13,7 +12,7 @@ public class Player {
 
         if (alGetError() != AL_NO_ERROR){
             System.err.println("Failure to create an audio player");
-            System.exit(1);
+            return;
         }
 
         setGain(gain);
@@ -31,8 +30,12 @@ public class Player {
 
     public float getGain() {return gain;}
     public void setGain(float gain) {this.gain = gain; alSourcef(id, AL_GAIN, gain);}
+    public void stop() {alSourceUnqueueBuffers(id); alSourceStop(id);}
+    public void pause() {if (alGetSourcei(id, AL_SOURCE_STATE) == AL_PLAYING) alSourcePause(id);}
+    public void start() {if (alGetSourcei(id, AL_SOURCE_STATE) == AL_PAUSED) alSourcePlay(id);}
+    public void restart() {start(); alSourcePlay(id);}
 
-    public boolean isNotPlaying() {return alGetSourcei(id, AL_SOURCE_STATE) != AL_PLAYING;}
+    public boolean isStopped() {return alGetSourcei(id, AL_SOURCE_STATE) == AL_STOPPED;}
 
     public void free() {alDeleteSources(id);}
 }

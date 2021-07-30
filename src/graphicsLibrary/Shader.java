@@ -1,9 +1,8 @@
-package graphics;
+package graphicsLibrary;
 
 import org.lwjgl.BufferUtils;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.FloatBuffer;
@@ -11,34 +10,28 @@ import java.nio.FloatBuffer;
 import static org.lwjgl.opengl.GL46C.*;
 
 public class Shader {
-    private int program;
-    private int vs;
-    private int fs;
+    private final int program;
 
     public Shader(String fileName){
         program = glCreateProgram();
-
-        vs = glCreateShader(GL_VERTEX_SHADER);
+        int vs = glCreateShader(GL_VERTEX_SHADER);
         glShaderSource(vs, createShader(fileName + ".vs"));
         glCompileShader(vs);
         if(glGetShaderi(vs, GL_COMPILE_STATUS) != 1){
-            System.err.println(glGetShaderInfoLog(vs));
+            System.err.println("Shader .vs File Compilation Error: " + glGetShaderInfoLog(vs));
             System.exit(1);
         }
 
-        fs = glCreateShader(GL_FRAGMENT_SHADER);
+        int fs = glCreateShader(GL_FRAGMENT_SHADER);
         glShaderSource(fs, createShader(fileName + ".fs"));
         glCompileShader(fs);
         if(glGetShaderi(fs, GL_COMPILE_STATUS) != 1){
-            System.err.println(glGetShaderInfoLog(vs));
+            System.err.println("Shader .fs File Compilation Error: " + glGetShaderInfoLog(vs));
             System.exit(1);
         }
 
         glAttachShader(program, vs);
         glAttachShader(program, fs);
-
-        glBindAttribLocation(program, 0, "vertices");
-        glBindAttribLocation(program, 1, "uv");
 
         glLinkProgram(program);
         if(glGetProgrami(program, GL_LINK_STATUS) != 1){
@@ -51,13 +44,16 @@ public class Shader {
             System.err.println(glGetProgramInfoLog(program));
             System.exit(1);
         }
+
+        glDeleteShader(vs);
+        glDeleteShader(fs);
     }
 
     private String createShader(String fileName){
         StringBuilder sb = new StringBuilder();
         BufferedReader br;
         try{
-            br = new BufferedReader(new FileReader(new File("res/Shaders/" + fileName)));
+            br = new BufferedReader(new FileReader("res/Shaders/" + fileName));
             String line;
             while((line = br.readLine()) != null){
                 sb.append(line);
@@ -69,6 +65,12 @@ public class Shader {
             e.printStackTrace();
         }
         return sb.toString();
+    }
+
+    public void setUniform(String name, float x){
+        int location = glGetUniformLocation(program, name);
+        if (location != -1)
+            glUniform1f(location, x);
     }
 
     public void setUniform(String name, float x, float y){

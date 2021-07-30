@@ -12,6 +12,6 @@ public class Cursor extends GLFWCursorPosCallback {
         yPos = y;
     }
 
-    public static double x() {return xPos;}
-    public static double y() {return yPos;}
+    public static float x() {return (float) xPos;}
+    public static float y() {return (float) yPos;}
 }

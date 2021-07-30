@@ -1,15 +1,15 @@
 package runner;
 
-import static audio.AudioManager.initAudioManager;
-import static audio.AudioManager.terminateAudioManager;
-import static graphics.Window.initWindow;
-import static graphics.Window.renderScreen;
-import static org.lwjgl.glfw.GLFW.*;
-
-import graphics.Color;
-import graphics.Font;
 import handlers.ErrorHandler;
 import handlers.States;
+
+import static audioLibrary.AudioManager.initAudioManager;
+import static audioLibrary.AudioManager.terminateAudioManager;
+import static graphicsLibrary.Window.initWindow;
+import static graphicsLibrary.Window.renderScreen;
+import static org.lwjgl.glfw.GLFW.*;
+import static runner.App.initColors;
+import static runner.App.initFonts;
 
 public class Driver {
     public static final double FPSInverse = 1.0/60;
@@ -17,26 +17,18 @@ public class Driver {
     private static boolean running = false;
     private App app;
 
-    public static Color WHITE = new Color(1, 1, 1, 1);
-    public static Color BLACK = new Color(0, 0, 0, 1);
-
     private void init() {
         glfwSetErrorCallback(new ErrorHandler());
         running = true;
         States.init();
-        initWindow(1920, 1080, false, true);
-        initFonts();
         initColors();
+        initFonts();
+        initWindow(1920, 1080, false, true, "WINDOW NAME HERE");
         initAudioManager();
         app = new App();
     }
 
-    public static void initFonts(){}
 
-    public static void initColors(){
-        WHITE = new Color(1, 1, 1, 1);
-        BLACK = new Color(0, 0, 0, 1);
-    }
 
     private void run(){
         init();
@@ -62,10 +54,11 @@ public class Driver {
             }
         }
 
+        terminateAudioManager();
         glfwTerminate();
     }
 
-    public static void stopRunning() {running = false; terminateAudioManager();}
+    public static void stopRunning() {running = false;}
 
     public static double getTime() {return (double)System.nanoTime() / (double) 1000000000;}
 

@@ -3,6 +3,9 @@ package handlers;
 import java.util.HashMap;
 import java.util.Map;
 
+import static handlers.Keys.setKeysRepeated;
+import static handlers.MouseButton.setLeftRepeated;
+import static handlers.MouseButton.setRightRepeated;
 import static org.lwjgl.glfw.GLFW.*;
 
 public class States {
@@ -114,5 +117,11 @@ public class States {
         keyMap.put(GLFW_KEY_SEMICOLON, KEY_SEMICOLON);
         keyMap.put(GLFW_KEY_LEFT_BRACKET, KEY_LEFT_BRACKET);
         keyMap.put(GLFW_KEY_RIGHT_BRACKET, KEY_RIGHT_BRACKET);
+    }
+
+    public static void updateInput(){
+        setLeftRepeated();
+        setRightRepeated();
+        setKeysRepeated();
     }
 }

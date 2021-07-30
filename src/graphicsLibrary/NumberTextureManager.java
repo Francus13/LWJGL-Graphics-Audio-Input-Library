@@ -1,12 +1,13 @@
-package graphics;
+package graphicsLibrary;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static graphics.Text.createTextTexture;
-import static runner.Driver.BLACK;
+import static graphicsLibrary.Text.createTextTexture;
+import static runner.App.BLACK;
 
-public class NumberTextureGetter {
+public class NumberTextureManager {
+    @SuppressWarnings({"unchecked", "rawtypes"})
     private final static Map<Color, Map<Font, Map<Integer, Texture>>> colorMap = new HashMap();
 
     public static Texture getNumberTexture(int num, Font font){

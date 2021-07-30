@@ -1,4 +1,7 @@
-package graphics;
+package graphicsLibrary;
+
+import org.lwjgl.BufferUtils;
+import org.lwjgl.stb.STBTTFontinfo;
 
 import java.io.DataInputStream;
 import java.io.File;
@@ -9,9 +12,6 @@ import java.nio.IntBuffer;
 import java.security.AccessControlException;
 import java.util.HashMap;
 import java.util.Map;
-
-import org.lwjgl.BufferUtils;
-import org.lwjgl.stb.STBTTFontinfo;
 
 import static org.lwjgl.stb.STBTruetype.*;
 
