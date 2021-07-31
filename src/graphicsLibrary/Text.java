@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static graphicsLibrary.Texture.PADDING;
+import static graphicsLibrary.Texture.emptyTexture;
 import static runner.App.BLACK;
 import static runner.Driver.getTime;
 
@@ -19,21 +20,27 @@ public class Text extends Renderable{
     private boolean variableSized;
     private boolean variableHeight;
 
-    public static Texture createTextTexture(String text, Font font) {return createTextTexture(text, font, BLACK);}
+    public static Texture createTextTexture(String text, Font font) {return createTextTexture(new String[] {text}, new Font[] {font}, new Color[] {BLACK});}
+    public static Texture createTextTexture(String text, Font font, Color color) {return createTextTexture(new String[] {text}, new Font[] {font}, new Color[] {color});}
+    public static Texture createTextTexture(String[] text, Font[] font) {return createTextTexture(text, font, new Color[] {BLACK});}
 
-    public static Texture createTextTexture(String text, Font font, Color color){
-        int[] sizes = getVarSize(new String[] {text}, new Font[] {font});
-        return new Texture(new String[] {text}, new Font[] {font}, new Color[] {color}, LEFT,
-                sizes[0] + PADDING + 1, sizes[1]);
+    public static Texture createTextTexture(String[] text, Font[] fonts, Color[] colors){
+        trimSpaces(text);
+        int[] sizes = getVarSize(text, fonts);
+        return new Texture(text, fonts, colors, LEFT, sizes[0] + PADDING + 1, sizes[1]);
     }
 
     public void setTextTexture(Texture texture){
+        if (texture == null)
+            texture = emptyTexture;
+
         if (alignment == CENTER)
             x += (this.textTexture.width() - texture.width()) / 2f;
         else if (alignment == RIGHT)
             x += this.textTexture.width() - texture.width();
 
         setSize(texture.width(), texture.height());
+        setPQToSize();
         this.textTexture = texture;
     }
 
@@ -43,11 +50,11 @@ public class Text extends Renderable{
     public Text (Texture texture, int alignment){
         super();
 
-        if (texture != null){
-            setSize(texture.width(), texture.height());
-            setPQToSize();
-        }
+        if (texture == null)
+            texture = emptyTexture;
 
+        setSize(texture.width(), texture.height());
+        setPQToSize();
         setVarialbes(null, alignment, BLACK, false, false);
         this.textTexture = texture;
     }
@@ -77,7 +84,10 @@ public class Text extends Renderable{
         }
 
         setPQToSize();
-        textTexture = new Texture(text, fonts, colors, this.alignment, (int) this.width, (int) this.height);
+        if (text.length == 1 && text[0].length() == 0)
+            textTexture = emptyTexture;
+        else
+            textTexture = new Texture(text, fonts, colors, this.alignment, (int) this.width, (int) this.height);
     }
 
     public void updateText(String text) {updateText(new String[] {text}, new Font[] {font}, new Color[] {color});}
@@ -111,8 +121,12 @@ public class Text extends Renderable{
 
         font = fonts[0];
         color = colors[0];
-        textTexture.free();
-        textTexture = new Texture(text, fonts, colors, alignment, (int) width, (int) this.height);
+        if (textTexture != emptyTexture)
+            textTexture.free();
+        if (text.length == 1 && text[0].length() == 0)
+            textTexture = emptyTexture;
+        else
+            textTexture = new Texture(text, fonts, colors, alignment, (int) width, (int) this.height);
     }
 
     public void setOriginalSize(){
@@ -126,8 +140,7 @@ public class Text extends Renderable{
     @Override
     public float yCenter(Renderable r) {return super.yCenter(r) - 1;}
 
-    public void free() {
-        textTexture.free(); color = null; font = null;}
+    public void free() {if (textTexture != emptyTexture) textTexture.free(); color = null; font = null;}
 
     public Texture getTexture() {if (timed && getTime() - startTime >= time) return null; return textTexture;}
 
@@ -146,11 +159,12 @@ public class Text extends Renderable{
             String str = text[i];
             int startIndex = 0;
             int endIndex = str.length();
-            while (str.charAt(startIndex) == ' ')
+            while (startIndex < str.length() && str.charAt(startIndex) == ' ')
                 startIndex++;
-            while (str.charAt(endIndex - 1) == ' ')
+            while (endIndex > startIndex && str.charAt(endIndex - 1) == ' ')
                 endIndex--;
-            text[i] = str.substring(startIndex, endIndex);
+            if (startIndex != endIndex)
+                text[i] = str.substring(startIndex, endIndex);
         }
     }
 
@@ -198,12 +212,12 @@ public class Text extends Renderable{
         for (String str : text){
             char[] chars = str.toCharArray();
             for (char c: chars){
-                    if (c == '\n')
-                        height += defaultFont.getVAdvance() + PADDING;
+                if (c == '\n')
+                    height += defaultFont.getVAdvance() + PADDING;
             }
         }
 
-        return height;
+        return height + 1;
     }
 
     private static void addNewLines(String[] text, Font[] fonts, float width){

@@ -24,8 +24,10 @@ public class App {
     }
 
     public static Color BLACK;
+    public static Color WHITE;
 
     public static void initColors(){
         BLACK = new Color(0, 0, 0, 1);
+        WHITE = new Color(1, 1, 1, 1);
     }
 }

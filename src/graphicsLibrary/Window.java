@@ -14,7 +14,7 @@ import static java.lang.System.exit;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL46C.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
-import static runner.Driver.WHITE;
+import static runner.App.WHITE;
 import static runner.App.debug;
 
 public class Window {
